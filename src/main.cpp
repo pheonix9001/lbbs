@@ -1,6 +1,11 @@
 #include <iostream>
+#include <lua.hpp>
+
+lua_State* L;
 
 int main (int argc, char *argv[]) {
-	std::cout << "Hello world" << std::endl;
+	L = luaL_newstate();
+
+	lua_close(L);
 	return 0;
 }
