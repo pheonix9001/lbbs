@@ -9,7 +9,7 @@ void define_functions(lua_State* L) {
 	lua_register(L, "project", luafunc_project);
 }
 
-Backend *nb;
+Backend *backend;
 
 int main (int argc, char *argv[]) {
 	// initialize lua
@@ -18,8 +18,12 @@ int main (int argc, char *argv[]) {
 	luaL_openlibs(L);
 	
 	// initialize ninja backend
+	// TODO: add command line option for backends
 	Ninja temp{"build/build.ninja"};
-	nb = &temp;
+	backend = &temp;
+
+	auto* hellorule = backend->create_rule("hello", {{"cmd", "Hello"}, {"desc", "This is cool"}});
+	hellorule->generate("a.c", {"b.c", "c.c", "d.c"});
 
 	int result = luaL_loadfile(L, "mesonbuild.lua");
 	Lcheck_err(result, L);
