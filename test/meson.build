@@ -1,1 +1,1 @@
-test('Basic test', msn_lua)
+subdir('basic')

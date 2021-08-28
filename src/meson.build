@@ -2,7 +2,8 @@ luajit_dep = dependency('luajit')
 
 sources = [
 	'main.cpp',
-	'global.cpp'
+	'global.cpp',
+	'project.cpp'
 	]
 
 dependencies = [luajit_dep]

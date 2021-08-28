@@ -1,1 +1,3 @@
-io.write('Hi\n')
+project('basic', 'cpp', {
+	desc = 'A basic test'
+})

@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <lua.hpp>
+#include <string.h>
 
 int r;
 
@@ -18,16 +19,18 @@ void err(const char* string, ...) {
 void lerr(bool iserr, const char* string, ...) {
 	if(iserr) {
 		va_list list;
-
 		va_start(list, string);
-		vfprintf(stderr, string, list);
+
+		char* msg = strdup("\033[31m ERROR:\033[0m ");
+		strcat(msg, string);
+		vfprintf(stderr, msg, list);
 		_Exit(-1);
 	}
 }
 
 void Lprint_err(lua_State* state) {
 	const char* msg = lua_tostring(state, -1);
-	std::cout << "Lua error:" <<  msg << std::endl;
+	std::cerr << "Lua error: " <<  msg << std::endl;
 	lua_pop(state, 1);
 }
 
