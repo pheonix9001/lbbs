@@ -6,9 +6,8 @@ class Ninja;
 
 class NinjaRule: protected Rule {
 	std::string name;
-	Ninja* backend;
 public:
-	NinjaRule(Ninja* backend, std::string _name);
+	NinjaRule(std::string _name);
 	void generate(std::string out, std::vector<std::string> in);
 };
 

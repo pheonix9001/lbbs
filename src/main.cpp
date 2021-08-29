@@ -7,6 +7,7 @@
 
 void define_functions(lua_State* L) {
 	lua_register(L, "project", luafunc_project);
+	lua_register(L, "custom_rule", luafunc_custom_rule);
 }
 
 Backend *backend;
@@ -21,9 +22,6 @@ int main (int argc, char *argv[]) {
 	// TODO: add command line option for backends
 	Ninja temp{"build/build.ninja"};
 	backend = &temp;
-
-	auto* hellorule = backend->create_rule("hello", {{"cmd", "Hello"}, {"desc", "This is cool"}});
-	hellorule->generate("a.c", {"b.c", "c.c", "d.c"});
 
 	int result = luaL_loadfile(L, "mesonbuild.lua");
 	Lcheck_err(result, L);

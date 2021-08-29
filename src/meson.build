@@ -4,7 +4,8 @@ sources = [
 	'main.cpp',
 	'global.cpp',
 	'project.cpp',
-	'backends/ninja.cpp'
+	'backends/ninja.cpp',
+	'backends/backend.cpp'
 	]
 
 dependencies = [luajit_dep]

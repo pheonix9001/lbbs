@@ -23,7 +23,8 @@ int luafunc_project(lua_State* L) {
 	Project::desc = lua_tostring(L, -1);
 	lua_pop(L, -1);
 
-	std::cerr << "Project name: " << Project::name << "\n"
+	std::cerr << "-- Initializing project\n"
+	"Project name: " << Project::name << "\n"
 	<< "Language: " << Project::lang << "\n"
 	<< "Description: " << Project::desc << std::endl;
 

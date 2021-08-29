@@ -1,25 +1,28 @@
 #include "ninja.h"
+#include <lua.hpp>
 
 #include <iostream>
 #include <unistd.h>
 #include <fcntl.h>
 #include <algorithm>
 
+extern Backend* backend;
+
 //
 // NinjaRule functions
 //
-NinjaRule::NinjaRule(Ninja* _backend, std::string _name) {
+NinjaRule::NinjaRule(std::string _name) {
 	this->name = _name;
-	this->backend = _backend;
 }
 
 void NinjaRule::generate(std::string out, std::vector<std::string> in) {
-	auto& fs = this->backend->fs;
+	auto& fs = ((Ninja*)backend)->fs;
 
 	fs << "build " << out << ": " << this->name;
 	for(auto& i: in) {
 		fs << " " << i ;
 	}
+	fs << "\n";
 }
 
 //
@@ -43,7 +46,7 @@ Rule* Ninja::create_rule(std::string name, std::map<std::string, std::string> ex
 	}
 	fs << "\n";
 
-	NinjaRule* ret = new NinjaRule{this, name};
+	NinjaRule* ret = new NinjaRule{name};
 
 	return (Rule*)ret;
 }

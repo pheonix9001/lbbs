@@ -1,3 +1,4 @@
+#include <lua.hpp>
 #include <string>
 #include <vector>
 #include <map>
@@ -14,3 +15,5 @@ public:
 	std::map<std::string, std::string> extra_props)=0;
 	virtual ~Backend() {}
 };
+
+int luafunc_custom_rule(lua_State* L);
