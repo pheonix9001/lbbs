@@ -10,6 +10,6 @@ sources = [
 
 dependencies = [luajit_dep]
 
-msn_lua = executable('msn-lua', sources,
+tachyon = executable('tachyon', sources,
 	install : true,
 	dependencies: dependencies)

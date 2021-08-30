@@ -40,7 +40,7 @@ int main (int argc, char *argv[]) {
 
 	define_functions(L);
 
-	int result = luaL_dofile(L, "mesonbuild.lua");
+	int result = luaL_dofile(L, "tachyonfile.lua");
 	Lcheck_err(result, L);
 
 	lua_close(L);
