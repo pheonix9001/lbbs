@@ -8,7 +8,7 @@ class NinjaRule: protected Rule {
 	std::string name;
 public:
 	NinjaRule(std::string _name);
-	void generate(std::string out, std::vector<std::string> in);
+	void generate(std::string out, std::vector<std::string>& in);
 };
 
 class Ninja: public Backend {
@@ -17,6 +17,6 @@ private:
 
 	friend NinjaRule;
 public:
-	Rule* create_rule(std::string name, std::map<std::string, std::string> extra_props);
+	Rule* create_rule(std::string name, std::map<std::string, std::string>& extra_props);
 	Ninja(const char* file);
 };

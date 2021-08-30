@@ -2,7 +2,9 @@ project('basic', 'cpp', {
 	desc = 'A basic test'
 })
 
-custom_rule('hello', {
-this = 'is',
-really = 'cool'
+compiler = Rule.new('hello', {
+	this = 'is',
+	really = 'cool'
 })
+print(compiler)
+compiler:generate('a.c', {'b.c', 'c.c'})

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <lua.hpp>
 #include <string.h>
+#include <vector>
 
 int r;
 
@@ -38,4 +39,25 @@ void Lcheck_err(int result, lua_State* state) {
 	if(result != 0) {
 		Lprint_err(state);
 	}
+}
+
+std::vector<std::string> Ltable_to_vector(lua_State* L, int index) {
+	std::vector<std::string> temp;
+
+	lua_pushvalue(L, index);
+	int len = luaL_getn(L, -1);
+	temp.resize(len);
+
+	for (int i = 0; i < len; i++) {
+		lua_pushinteger(L, i + 1);
+		lua_gettable(L, -2);
+
+		const char* str = luaL_checkstring(L, -1);
+		temp[i] = str;
+	
+		lua_pop(L, 1);
+	}
+	lua_pop(L, 1);
+
+	return temp;
 }

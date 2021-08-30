@@ -7,7 +7,22 @@
 
 void define_functions(lua_State* L) {
 	lua_register(L, "project", luafunc_project);
-	lua_register(L, "custom_rule", luafunc_custom_rule);
+
+	// Rule
+	// https://gist.github.com/zester/2438462
+	luaL_Reg rule_regs[] = {
+		{"new", luafunc_rule_new},
+		{"generate", luafunc_rule_generate},
+		{"__gc", luafunc_rule_destroy},
+		{0, 0}
+	};
+
+	luaL_newmetatable(L, "Rule_meta");
+	luaL_register(L, 0, rule_regs);
+
+	lua_pushvalue(L, -1);
+	lua_setfield(L, -1, "__index");
+	lua_setglobal(L, "Rule");
 }
 
 Backend *backend;
@@ -17,18 +32,15 @@ int main (int argc, char *argv[]) {
 	lua_State* L;
 	L = luaL_newstate();
 	luaL_openlibs(L);
-	
+
 	// initialize ninja backend
 	// TODO: add command line option for backends
 	Ninja temp{"build/build.ninja"};
 	backend = &temp;
 
-	int result = luaL_loadfile(L, "mesonbuild.lua");
-	Lcheck_err(result, L);
-
 	define_functions(L);
 
-	result = lua_pcall(L, 0, LUA_MULTRET, 0);
+	int result = luaL_dofile(L, "mesonbuild.lua");
 	Lcheck_err(result, L);
 
 	lua_close(L);
