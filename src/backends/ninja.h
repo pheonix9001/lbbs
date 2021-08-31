@@ -17,6 +17,6 @@ private:
 
 	friend NinjaRule;
 public:
-	Rule* create_rule(std::string name, std::map<std::string, std::string>& extra_props);
+	Rule* create_rule(std::string name, std::unordered_map<std::string, std::string>& extra_props);
 	Ninja(const char* file);
 };

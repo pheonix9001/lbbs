@@ -1,7 +1,7 @@
 #include <lua.hpp>
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 class Rule {
 public:
@@ -12,7 +12,7 @@ public:
 class Backend {
 public:
 	virtual Rule* create_rule(std::string name,
-	std::map<std::string, std::string>& extra_props)=0;
+	std::unordered_map<std::string, std::string>& extra_props)=0;
 	virtual ~Backend() {}
 };
 

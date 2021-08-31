@@ -1,5 +1,6 @@
 #include <lua.hpp>
 #include <iostream>
+#include <unordered_map>
 
 #include "backend.h"
 #include "global.h"
@@ -9,7 +10,7 @@ extern Backend* backend;
 int luafunc_rule_new(lua_State* L) {
 	const char* name = lua_tostring(L, 1);
 
-	std::map<std::string, std::string> temp;
+	std::unordered_map<std::string, std::string> temp;
 	
 	// push table and nil
 	lua_pushvalue(L, 2);

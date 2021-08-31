@@ -38,7 +38,7 @@ Ninja::Ninja(const char* file) : fs(file){
 	<< "#\n";
 }
 
-Rule* Ninja::create_rule(std::string name, std::map<std::string, std::string>& extra_props) {
+Rule* Ninja::create_rule(std::string name, std::unordered_map<std::string, std::string>& extra_props) {
 	std::cerr << "-- Generating rule for " << name << std::endl;
 
 	this->fs << "rule " << name << "\n";
