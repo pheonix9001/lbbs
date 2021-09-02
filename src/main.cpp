@@ -1,9 +1,13 @@
+#include <cstring>
 #include <iostream>
 #include <lua.hpp>
 
 #include "global.h"
 #include "project.h"
 #include "backends/ninja.h"
+
+Backend *backend;
+char* tachyonfile = (char*)"tachyonfile.lua";
 
 void define_functions(lua_State* L) {
 	lua_register(L, "project", luafunc_project);
@@ -25,7 +29,35 @@ void define_functions(lua_State* L) {
 	lua_setglobal(L, "Rule");
 }
 
-Backend *backend;
+void cmd_line_parse(int argc, char* const* argv) {
+	// command line args
+	for(;argc > 0;argc--, argv++) {
+		if(argv[0][0] == '-') {
+			int argv_idx = 1;
+			char c = argv[0][argv_idx++];
+			switch (c) {
+				case 'f':
+					tachyonfile = argv[1];
+					argc--;
+					break;
+				case 'b': {
+					char* backendname = argv[1];
+					if(strcmp(backendname, "ninja") == 0) {
+						backend = new Ninja{"build/build.ninja"};
+						std::cerr << "-- Set backend to ninja" << std::endl;
+					} else {
+						backend = new Ninja{"build/build.ninja"};
+					}
+					argc--;
+					break;
+				}
+				default:
+					err("Unknown option %c", c);
+					break;
+			}
+		}
+	}
+}
 
 int main (int argc, char *argv[]) {
 	// initialize lua
@@ -33,32 +65,7 @@ int main (int argc, char *argv[]) {
 	L = luaL_newstate();
 	luaL_openlibs(L);
 
-	char* tachyonfile = (char*)"tachyonfile.lua";
-
-	// command line args
-	int targc = argc;
-	char** targv = argv;
-
-	for(;targc > 0;targc--, targv++) {
-		if(targv[0][0] == '-') {
-			int argv_idx = 1;
-			char c = targv[0][argv_idx++];
-			switch (c) {
-				case 'f':
-					tachyonfile = targv[1];
-					targc--;
-					break;
-				default:
-					err("Unknown option %c", c);
-					break;
-			}
-		}
-	}
-
-	// initialize ninja backend
-	// TODO: add command line option for backends
-	Ninja temp{"build/build.ninja"};
-	backend = &temp;
+	cmd_line_parse(argc, argv);
 
 	define_functions(L);
 
