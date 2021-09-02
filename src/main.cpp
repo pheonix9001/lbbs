@@ -33,6 +33,28 @@ int main (int argc, char *argv[]) {
 	L = luaL_newstate();
 	luaL_openlibs(L);
 
+	char* tachyonfile = (char*)"tachyonfile.lua";
+
+	// command line args
+	int targc = argc;
+	char** targv = argv;
+
+	for(;targc > 0;targc--, targv++) {
+		if(targv[0][0] == '-') {
+			int argv_idx = 1;
+			char c = targv[0][argv_idx++];
+			switch (c) {
+				case 'f':
+					tachyonfile = targv[1];
+					targc--;
+					break;
+				default:
+					err("Unknown option %c", c);
+					break;
+			}
+		}
+	}
+
 	// initialize ninja backend
 	// TODO: add command line option for backends
 	Ninja temp{"build/build.ninja"};
@@ -40,7 +62,7 @@ int main (int argc, char *argv[]) {
 
 	define_functions(L);
 
-	int result = luaL_dofile(L, "tachyonfile.lua");
+	int result = luaL_dofile(L, tachyonfile);
 	Lcheck_err(result, L);
 
 	lua_close(L);
