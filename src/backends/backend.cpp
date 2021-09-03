@@ -6,9 +6,8 @@
 #include "global.h"
 
 extern Backend* backend;
-
 int luafunc_rule_new(lua_State* L) {
-	const char* name = lua_tostring(L, 1);
+	const char* name = luaL_checkstring(L, 1);
 
 	std::unordered_map<std::string, std::string> temp;
 	

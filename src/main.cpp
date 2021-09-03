@@ -6,7 +6,7 @@
 #include "project.h"
 #include "backends/ninja.h"
 
-Backend *backend;
+Backend* backend = 0;
 char* tachyonfile = (char*)"tachyonfile.lua";
 
 void define_functions(lua_State* L) {
@@ -45,8 +45,6 @@ void cmd_line_parse(int argc, char* const* argv) {
 					if(strcmp(backendname, "ninja") == 0) {
 						backend = new Ninja{"build/build.ninja"};
 						std::cerr << "-- Set backend to ninja" << std::endl;
-					} else {
-						backend = new Ninja{"build/build.ninja"};
 					}
 					argc--;
 					break;
@@ -69,6 +67,9 @@ int main (int argc, char *argv[]) {
 	Lsetpath(L, "/usr/lib/tachyon/?.so");
 
 	cmd_line_parse(argc, argv);
+	if(backend == 0) {
+		backend = new Ninja{"build/build.ninja"};
+	}
 
 	define_functions(L);
 
@@ -76,5 +77,6 @@ int main (int argc, char *argv[]) {
 	Lcheck_err(result, L);
 
 	lua_close(L);
+	delete backend;
 	return 0;
 }
