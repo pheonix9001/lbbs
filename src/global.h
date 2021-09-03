@@ -12,5 +12,6 @@ void lerr(bool iserr, const char* string, ...);
 void Lprint_err(lua_State* state);
 void Lcheck_err(int result, lua_State* state);
 std::vector<std::string> Ltable_to_vector(lua_State* L, int index);
+void Lsetpath(lua_State* L, const char* path);
 
 // vim: ft=cpp

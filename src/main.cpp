@@ -63,7 +63,10 @@ int main (int argc, char *argv[]) {
 	// initialize lua
 	lua_State* L;
 	L = luaL_newstate();
+
+	// set library path
 	luaL_openlibs(L);
+	Lsetpath(L, "/usr/lib/tachyon/?.so");
 
 	cmd_line_parse(argc, argv);
 
