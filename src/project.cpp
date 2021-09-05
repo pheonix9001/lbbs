@@ -16,12 +16,12 @@ namespace Project {
 };
 
 int luafunc_project(lua_State* L) {
-	Project::name = lua_tostring(L, 1);
-	Project::lang = lua_tostring(L, 2);
+	Project::name = luaL_checkstring(L, 1);
+	Project::lang = luaL_checkstring(L, 2);
 
 	lua_getfield(L, 3, "desc");
-	Project::desc = lua_tostring(L, -1);
-	lua_pop(L, -1);
+	Project::desc = luaL_checkstring(L, -1);
+	lua_pop(L, 1);
 
 	std::cerr << "-- Initializing project\n"
 	"Project name: " << Project::name << "\n"

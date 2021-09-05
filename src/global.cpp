@@ -1,11 +1,12 @@
 #include <iostream>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <lua.hpp>
 #include <string.h>
 #include <vector>
+
+#include "global.h"
 
 int r;
 
@@ -29,15 +30,11 @@ void lerr(bool iserr, const char* string, ...) {
 	}
 }
 
-void Lprint_err(lua_State* state) {
+void Lcheck_err(int result, lua_State* state) {
+	if(result != 0) {
 	const char* msg = lua_tostring(state, -1);
 	std::cerr << "Lua error: " <<  msg << std::endl;
 	lua_pop(state, 1);
-}
-
-void Lcheck_err(int result, lua_State* state) {
-	if(result != 0) {
-		Lprint_err(state);
 	}
 }
 
@@ -54,7 +51,7 @@ std::vector<std::string> Ltable_to_vector(lua_State* L, int index) {
 
 		const char* str = luaL_checkstring(L, -1);
 		temp[i] = str;
-	
+
 		lua_pop(L, 1);
 	}
 	lua_pop(L, 1);
@@ -73,4 +70,25 @@ void Lsetpath(lua_State* L, const char* path) {
 	lua_pushstring( L, cur_path.c_str() ); // push the new one
 	lua_setfield( L, -2, "cpath" ); // set the field "path" in table at -2 with value at top of stack
 	lua_pop( L, 1 ); // get rid of package table from top of stack
+}
+
+//
+// LGenericType
+//
+void LGenericType::getfromidx(lua_State* L, int idx) {
+	int type = lua_type(L, idx);
+
+	switch (type) {
+		case LUA_TNUMBER:
+			this->type = Type::number;
+			this->data.integer = lua_tointeger(L, idx);
+			break;
+		case LUA_TSTRING:
+			this->type = Type::string;
+			this->data.str = lua_tostring(L, idx);
+			break;
+		default:
+			err("Type convertion for type not implemented");
+			break;
+	}
 }
