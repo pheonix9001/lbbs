@@ -78,14 +78,12 @@ void Lsetpath(lua_State* L, const char* path) {
 void LGenericType::getfromidx(lua_State* L, int idx) {
 	int type = lua_type(L, idx);
 
-	switch (type) {
+	switch(type) {
 		case LUA_TNUMBER:
-			this->type = Type::number;
-			this->data.integer = lua_tointeger(L, idx);
+			this->data = (int)lua_tointeger(L, idx);
 			break;
 		case LUA_TSTRING:
-			this->type = Type::string;
-			this->data.str = lua_tostring(L, idx);
+			this->data = lua_tostring(L, idx);
 			break;
 		default:
 			err("Type convertion for type not implemented");

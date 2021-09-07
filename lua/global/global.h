@@ -1,4 +1,5 @@
 #include <lua.h>
+#include <lauxlib.h>
 
 static void* Rule_new(lua_State* L, const char* name, const char* objs[][2]) {
 	// get len of objs
