@@ -71,22 +71,3 @@ void Lsetpath(lua_State* L, const char* path) {
 	lua_setfield( L, -2, "cpath" ); // set the field "path" in table at -2 with value at top of stack
 	lua_pop( L, 1 ); // get rid of package table from top of stack
 }
-
-//
-// LGenericType
-//
-void LGenericType::getfromidx(lua_State* L, int idx) {
-	int type = lua_type(L, idx);
-
-	switch(type) {
-		case LUA_TNUMBER:
-			this->data = (int)lua_tointeger(L, idx);
-			break;
-		case LUA_TSTRING:
-			this->data = lua_tostring(L, idx);
-			break;
-		default:
-			err("Type convertion for type not implemented");
-			break;
-	}
-}

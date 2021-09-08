@@ -4,6 +4,7 @@ sources = [
 	'main.cpp',
 	'global.cpp',
 	'project.cpp',
+	'option.cpp',
 	'backends/ninja.cpp',
 	'backends/backend.cpp'
 	]
