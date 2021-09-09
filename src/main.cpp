@@ -31,7 +31,6 @@ void define_functions(lua_State* L) {
 }
 
 void cmd_line_parse(int argc, char* const* argv) {
-	bool has_seen_opts = false;
 	deserialize_options();
 
 	// command line args
@@ -67,20 +66,18 @@ void cmd_line_parse(int argc, char* const* argv) {
 					std::string value = str.substr(split + 1, end);
 
 					std::cout << "-- Setting option " << key << " = " << value << std::endl;
-					options[key].data = value;
-					has_seen_opts = true;
+					if(value[0] == '\'' || value[0] == '\"') {
+						cmd_options[key].data = value.substr(1, value.length());
+					} else {
+						cmd_options[key].data = value;
+					}
 					break;
 				}
 				default:
-					err("Unknown option %c", c);
+					err("Unknown option %c\n", c);
 					break;
 			}
 		}
-	}
-
-	if(has_seen_opts) {
-		serialize_options();
-		_Exit(0);
 	}
 }
 
@@ -93,15 +90,18 @@ int main (int argc, char *argv[]) {
 	luaL_openlibs(L);
 	Lsetpath(L, "/usr/lib/tachyon/?.so");
 
+	// Initialization functions
 	cmd_line_parse(argc, argv);
+	define_functions(L);
+
 	if(backend == 0) {
 		backend = new Ninja{"build/build.ninja"};
 	}
 
-	define_functions(L);
-
 	int result = luaL_dofile(L, tachyonfile);
 	Lcheck_err(result, L);
+
+	serialize_options();
 
 	lua_close(L);
 	delete backend;

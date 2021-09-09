@@ -6,7 +6,7 @@
 #include "global.h"
 
 std::map<std::string, OptionVal> options;
-std::map<std::string, OptionVal> tempoptions;
+std::map<std::string, OptionVal> cmd_options;
 
 void serialize_options() {
 	std::ofstream fs{"build/tachyon_opts.txt"};
@@ -48,12 +48,21 @@ void deserialize_options() {
 		getnextsub(start, end);
 		int vidx = std::stoi(file.substr(start + 1, end));
 
-		getnextsub(start, end);
+		start = end;
+		end += vlen + 1;
 		std::string value = file.substr(start + 1, end);
 
-		std::cout << klen << "|" << kkey << "|"
-		<< vlen << "|" << vidx << "|" << value << std::endl;
-
+		switch (vidx) {
+			case 0:
+				cmd_options[kkey].data = std::stoi(value);
+				break;
+			case 1:
+				cmd_options[kkey].data = value;
+				break;
+			default:
+				err("-- Option parsing error\n");
+				break;
+		}
 		getnextsub(start, end);
 	}
 }
@@ -61,10 +70,6 @@ void deserialize_options() {
 //
 // OptionVal
 //
-OptionVal::OptionVal() {
-	this->data = (void*)0;
-}
-
 void OptionVal::getfromidx(lua_State* L, int idx) {
 	int type = lua_type(L, idx);
 

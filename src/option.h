@@ -9,13 +9,13 @@
 class OptionVal {
 	private:
 	public:
-	std::variant<void*, int, std::string> data;
+	std::variant<int, std::string> data;
 
 	void getfromidx(lua_State* L, int idx);
-	OptionVal();
 };
 
 void serialize_options();
 void deserialize_options();
 
 extern std::map<std::string, OptionVal> options;
+extern std::map<std::string, OptionVal> cmd_options;
