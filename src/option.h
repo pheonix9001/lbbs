@@ -1,4 +1,7 @@
+#pragma once
+
 #include <variant>
+#include <map>
 #include <string>
 #include <lua.hpp>
 
@@ -6,8 +9,13 @@
 class OptionVal {
 	private:
 	public:
-	std::variant<int, std::string> data;
-	OptionVal(std::string str) { this->data = str; }
+	std::variant<void*, int, std::string> data;
 
 	void getfromidx(lua_State* L, int idx);
+	OptionVal();
 };
+
+void serialize_options();
+void deserialize_options();
+
+extern std::map<std::string, OptionVal> options;

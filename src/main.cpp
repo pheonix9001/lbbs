@@ -2,9 +2,10 @@
 #include <iostream>
 #include <lua.hpp>
 
-#include "global.h"
 #include "project.h"
 #include "backends/ninja.h"
+#include "global.h"
+#include "option.h"
 
 Backend* backend = 0;
 char* tachyonfile = (char*)"tachyonfile.lua";
@@ -30,12 +31,16 @@ void define_functions(lua_State* L) {
 }
 
 void cmd_line_parse(int argc, char* const* argv) {
+	bool has_seen_opts = false;
+	deserialize_options();
+
 	// command line args
 	for(;argc > 0;argc--, argv++) {
 		if(argv[0][0] == '-') {
 			int argv_idx = 1;
 			char c = argv[0][argv_idx++];
 			switch (c) {
+				// general
 				case 'f':
 					tachyonfile = argv[1];
 					argc--;
@@ -49,11 +54,33 @@ void cmd_line_parse(int argc, char* const* argv) {
 					argc--;
 					break;
 				}
+
+				// options
+				case 'd': {
+					std::string str;
+					str.assign(argv[1]);
+
+					auto split = str.find("=");
+					auto end = str.length();
+
+					std::string key = str.substr(0, split);
+					std::string value = str.substr(split + 1, end);
+
+					std::cout << "-- Setting option " << key << " = " << value << std::endl;
+					options[key].data = value;
+					has_seen_opts = true;
+					break;
+				}
 				default:
 					err("Unknown option %c", c);
 					break;
 			}
 		}
+	}
+
+	if(has_seen_opts) {
+		serialize_options();
+		_Exit(0);
 	}
 }
 

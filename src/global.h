@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 
+#pragma once
+
 extern int r;
 
 void err(const char* string, ...);
