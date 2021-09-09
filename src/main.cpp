@@ -28,6 +28,9 @@ void define_functions(lua_State* L) {
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -1, "__index");
 	lua_setglobal(L, "Rule");
+
+	// Options
+	lua_register(L, "option", luafunc_option);
 }
 
 void cmd_line_parse(int argc, char* const* argv) {
@@ -65,11 +68,18 @@ void cmd_line_parse(int argc, char* const* argv) {
 					std::string key = str.substr(0, split);
 					std::string value = str.substr(split + 1, end);
 
-					std::cout << "-- Setting option " << key << " = " << value << std::endl;
 					if(value[0] == '\'' || value[0] == '\"') {
-						cmd_options[key].data = value.substr(1, value.length());
+						auto actualval = value.substr(1, value.length());
+
+						std::cout << "-- Setting string option " << key << "=" << actualval << std::endl;
+						cmd_options[key].data = actualval;
 					} else {
-						cmd_options[key].data = value;
+						try {
+							std::cout << "-- Setting integer option " << key << " = " << value << std::endl;
+							cmd_options[key].data = std::stoi(value);
+						} catch(std::invalid_argument) {
+							err("-- Use \'str or \"str when passing a string\n");
+						}
 					}
 					break;
 				}

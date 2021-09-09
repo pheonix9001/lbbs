@@ -85,3 +85,40 @@ void OptionVal::getfromidx(lua_State* L, int idx) {
 			break;
 	}
 }
+
+//
+// Lua bindings
+//
+int luafunc_option(lua_State* L) {
+	const char* name = luaL_checkstring(L, 1);
+	int type = lua_type(L, 2);
+	bool ischecked = lua_toboolean(L, 3);
+
+	switch (type) {
+		case LUA_TNUMBER:
+			if(cmd_options.find(name) == cmd_options.end()) {
+				options[name].data = (int)lua_tointeger(L, 2);
+				return 0;
+			}
+			if(ischecked && cmd_options[name].data.index() != 0) {
+				err("Type given to option() is invalid.\n");
+			}
+			options[name] = cmd_options[name];
+			break;
+		case LUA_TSTRING:
+			if(cmd_options.find(name) == cmd_options.end()) {
+				options[name].data = lua_tostring(L, 2);
+				return 0;
+			}
+			if(ischecked && cmd_options[name].data.index() != 1) {
+				err("Type given to option() is invalid.\n");
+			}
+			options[name] = cmd_options[name];
+			break;
+		default:
+
+			break;
+	}
+
+	return 0;
+}

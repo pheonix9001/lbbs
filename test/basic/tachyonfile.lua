@@ -3,3 +3,4 @@ project('basic', 'cpp', {
 })
 
 c = require'lang.c.compiler'
+option('man', 'cool')
