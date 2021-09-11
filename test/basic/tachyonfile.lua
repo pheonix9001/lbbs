@@ -4,3 +4,5 @@ project('basic', 'cpp', {
 
 c = require'lang.c.compiler'
 option('man', 'cool')
+
+print(get_option('man'))

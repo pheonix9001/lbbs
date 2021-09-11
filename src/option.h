@@ -18,6 +18,7 @@ void serialize_options();
 void deserialize_options();
 
 int luafunc_option(lua_State* L);
+int luafunc_get_option(lua_State* L);
 
 extern std::map<std::string, OptionVal> options;
 extern std::map<std::string, OptionVal> cmd_options;

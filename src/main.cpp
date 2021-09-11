@@ -31,6 +31,7 @@ void define_functions(lua_State* L) {
 
 	// Options
 	lua_register(L, "option", luafunc_option);
+	lua_register(L, "get_option", luafunc_get_option);
 }
 
 void cmd_line_parse(int argc, char* const* argv) {

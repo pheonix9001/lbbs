@@ -101,17 +101,18 @@ int luafunc_option(lua_State* L) {
 				return 0;
 			}
 			if(ischecked && cmd_options[name].data.index() != 0) {
-				err("Type given to option() is invalid.\n");
+				err("-- Type given to -d %s is invalid.\nUse a string.\n", name);
 			}
 			options[name] = cmd_options[name];
 			break;
+
 		case LUA_TSTRING:
 			if(cmd_options.find(name) == cmd_options.end()) {
 				options[name].data = lua_tostring(L, 2);
 				return 0;
 			}
 			if(ischecked && cmd_options[name].data.index() != 1) {
-				err("Type given to option() is invalid.\n");
+				err("-- Type given to -d %s is invalid.\nUse an integer.\n");
 			}
 			options[name] = cmd_options[name];
 			break;
@@ -121,4 +122,22 @@ int luafunc_option(lua_State* L) {
 	}
 
 	return 0;
+}
+
+int luafunc_get_option(lua_State* L) {
+	const char* name = luaL_checkstring(L, 1);
+	
+	if(options.find(name) == options.end()) {
+		err("get_option() called before option() for %s", name);
+	} 
+	auto var = options[name];
+	if(var.data.index() == 0) {
+		lua_pushinteger(L, std::get<int>(var.data));
+	} else if(var.data.index() == 1) {
+		lua_pushstring(L, std::get<std::string>(var.data).c_str());
+	} else {
+		err("-- Unknown error inside get_option()");
+	}
+
+	return 1;
 }
