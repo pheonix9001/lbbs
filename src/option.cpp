@@ -13,10 +13,10 @@ void serialize_options() {
 
 	for(auto opt: options) {
 		std::string key = opt.first;
-		std::string value = std::get<std::string>(opt.second.data);
+		std::string value = opt.second.data;
 
 		fs << key.length() << "\033" << key << "\033" << 
-		value.length() << "\033" << opt.second.data.index() << "\033" << value  << "\033";
+		value.length() << "\033" << value  << "\033";
 	}
 	fs.flush();
 }
@@ -28,8 +28,8 @@ void deserialize_options() {
 	fs >> file;
 
 	auto getnextsub = [&file](int& start, int& end) {
-		start = end;
-		end = file.find("\033", start + 1);
+		start = end + 1;
+		end = file.find("\033", start);
 	};
 
 	int start = 0;
@@ -38,53 +38,22 @@ void deserialize_options() {
 	for (;(std::string::size_type)end != std::string::npos;) {
 		int klen = std::stoi(file.substr(start, end));
 
-		start = end;
+		start = end + 1;
 		end += klen + 1;
-		std::string kkey = file.substr(start + 1, end);
+		std::string kkey = file.substr(start, end - 2);
 
 		getnextsub(start, end);
-		int vlen = std::stoi(file.substr(start + 1, end));
+		int vlen = std::stoi(file.substr(start, end - 2));
 
-		getnextsub(start, end);
-		int vidx = std::stoi(file.substr(start + 1, end));
-
-		start = end;
+		start = end + 1;
 		end += vlen + 1;
-		std::string value = file.substr(start + 1, end);
+		std::string value = file.substr(start, end);
 
-		switch (vidx) {
-			case 0:
-				cmd_options[kkey].data = std::stoi(value);
-				break;
-			case 1:
-				cmd_options[kkey].data = value;
-				break;
-			default:
-				err("-- Option parsing error\n");
-				break;
-		}
 		getnextsub(start, end);
+		cmd_options[kkey].data = value;
 	}
 }
 
-//
-// OptionVal
-//
-void OptionVal::getfromidx(lua_State* L, int idx) {
-	int type = lua_type(L, idx);
-
-	switch(type) {
-		case LUA_TNUMBER:
-			this->data = (int)lua_tointeger(L, idx);
-			break;
-		case LUA_TSTRING:
-			this->data = lua_tostring(L, idx);
-			break;
-		default:
-			err("Type convertion for type not implemented");
-			break;
-	}
-}
 
 //
 // Lua bindings
@@ -92,52 +61,36 @@ void OptionVal::getfromidx(lua_State* L, int idx) {
 int luafunc_option(lua_State* L) {
 	const char* name = luaL_checkstring(L, 1);
 	int type = lua_type(L, 2);
+	std::string def = luaL_checkstring(L, 2);
 	bool ischecked = lua_toboolean(L, 3);
 
-	switch (type) {
-		case LUA_TNUMBER:
-			if(cmd_options.find(name) == cmd_options.end()) {
-				options[name].data = (int)lua_tointeger(L, 2);
-				return 0;
-			}
-			if(ischecked && cmd_options[name].data.index() != 0) {
-				err("-- Type given to -d %s is invalid.\nUse a string.\n", name);
-			}
-			options[name] = cmd_options[name];
-			break;
-
-		case LUA_TSTRING:
-			if(cmd_options.find(name) == cmd_options.end()) {
-				options[name].data = lua_tostring(L, 2);
-				return 0;
-			}
-			if(ischecked && cmd_options[name].data.index() != 1) {
-				err("-- Type given to -d %s is invalid.\nUse an integer.\n");
-			}
-			options[name] = cmd_options[name];
-			break;
-		default:
-
-			break;
+	std::string actualval;
+	if(cmd_options.find(name) == cmd_options.end()) {
+		actualval = def;
+	} else {
+		actualval = cmd_options[name].data;
 	}
 
-	return 0;
+	options[name].data = actualval;
+	actualval = "return " + actualval;
+	Leval(L, actualval);
+	if(ischecked) {
+		int vtype = lua_type(L, -1);
+		if(vtype != type) {
+			err("-- option %s has an invalid type\n");
+		}
+	}
+
+	return 1;
 }
 
 int luafunc_get_option(lua_State* L) {
 	const char* name = luaL_checkstring(L, 1);
-	
-	if(options.find(name) == options.end()) {
-		err("get_option() called before option() for %s", name);
-	} 
-	auto var = options[name];
-	if(var.data.index() == 0) {
-		lua_pushinteger(L, std::get<int>(var.data));
-	} else if(var.data.index() == 1) {
-		lua_pushstring(L, std::get<std::string>(var.data).c_str());
-	} else {
-		err("-- Unknown error inside get_option()");
-	}
 
+	if(options.find(name) == options.end()) {
+		err("-- get_option() called before option() for %s\n", name);
+	} 
+
+	Leval(L, "return " + options[name].data);
 	return 1;
 }

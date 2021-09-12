@@ -38,6 +38,14 @@ void Lcheck_err(int result, lua_State* state) {
 	}
 }
 
+void Leval(lua_State* L, std::string str) {
+	lua_getglobal(L, "loadstring");
+	lua_pushstring(L, str.c_str());
+
+	lua_call(L, 1, 1);
+	lua_call(L, 0, 1);
+}
+
 std::vector<std::string> Ltable_to_vector(lua_State* L, int index) {
 	std::vector<std::string> temp;
 

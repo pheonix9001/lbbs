@@ -9,9 +9,7 @@
 class OptionVal {
 	private:
 	public:
-	std::variant<int, std::string> data;
-
-	void getfromidx(lua_State* L, int idx);
+	std::string data;
 };
 
 void serialize_options();
