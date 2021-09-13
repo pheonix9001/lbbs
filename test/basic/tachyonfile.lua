@@ -2,6 +2,6 @@ project('basic', 'cpp', {
 	desc = 'A basic test'
 })
 
-option('man', '"cool"', false)
+local c = require"lang/c/compiler"
 
-print(get_option('man'))
+c.executable('hello', {'src/main.c'})

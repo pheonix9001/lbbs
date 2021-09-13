@@ -36,7 +36,6 @@ void define_functions(lua_State* L) {
 
 void cmd_line_parse(int argc, char* const* argv) {
 	deserialize_options();
-	std::cout << cmd_options["man"].data << std::endl;
 
 	// command line args
 	for(;argc > 0;argc--, argv++) {
@@ -90,7 +89,8 @@ int main (int argc, char *argv[]) {
 
 	// set library path
 	luaL_openlibs(L);
-	Lsetpath(L, "/usr/lib/tachyon/?.so");
+	Lsetpath(L, "/usr/lib/tachyon/?.lua");
+	Lsetcpath(L, "/usr/lib/tachyon/?.so");
 
 	// Initialization functions
 	cmd_line_parse(argc, argv);

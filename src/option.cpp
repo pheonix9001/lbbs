@@ -47,7 +47,8 @@ void deserialize_options() {
 
 		start = end + 1;
 		end += vlen + 1;
-		std::string value = file.substr(start, end);
+		std::string value = file.substr(start, end - 2);
+		value = value.substr(0, value.length() - 1);
 
 		getnextsub(start, end);
 		cmd_options[kkey].data = value;

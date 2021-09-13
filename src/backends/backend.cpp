@@ -10,6 +10,7 @@ int luafunc_rule_new(lua_State* L) {
 	const char* name = luaL_checkstring(L, 1);
 
 	std::unordered_map<std::string, std::string> temp;
+	lerr(!lua_istable(L, 2), "Rule.new expects table as second argument\n");
 	
 	// push table and nil
 	lua_pushvalue(L, 2);

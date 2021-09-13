@@ -1,3 +1,3 @@
 incdirs = include_directories('global')
 
-subdir('lang/c')
+install_subdir('lang', install_dir: '/usr/lib/tachyon/')
