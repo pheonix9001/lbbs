@@ -13,7 +13,7 @@ Tachyon uses c++ instead of python. This is a bit counterintuitive since c++ is 
 
 Tachyon makes up for this by using lua(jit). Not only is it faster because JIT but lua was designed to extend and to be extended.
 
-Also the core is written in c++ because the core is pretty small.
+Also the core is written in c++ because the core is pretty small (less than 500 lines).
 
 ## Extensibility
 Due to its use of lua(jit) you can extend Tachyon in whatever language you want as long as it can compile into a shared library, anything that compiles to lua or lua itself(pretty op).
@@ -24,7 +24,7 @@ This means you can extend lua in pretty much any language eg c++, c, go, rust, t
 Tachyon is literally just a wrapper around ninja with some additional features. And features like executables are implemented by plugins. Heck, plugins are implemented by lua modules so you could technically rewrite this as a lua module.
 
 ## Turing completeness
-This is as bad as it is good. This means that I can do more things with Tachyon but that also means that a lot of people will reinvent the entire thing in pure lua(aka shoot themselves in the foot) or not make use of libraries provided by the project(eg using `Rule.new` and `Rule:generate` instead of using a language module)
+This is as bad as it is good. This means that one can do more things with Tachyon but that also means that a lot of people will reinvent the entire thing in pure lua(aka shoot themselves in the foot) or not make use of libraries provided by the project(eg using `Rule.new` and `Rule:generate` instead of using a language module)
 
 ## Easier to deal with multiple languages
 

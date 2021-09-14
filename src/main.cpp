@@ -5,6 +5,7 @@
 #include "project.h"
 #include "backends/ninja.h"
 #include "global.h"
+#include "lua.h"
 #include "option.h"
 
 Backend* backend = 0;
@@ -82,7 +83,7 @@ void cmd_line_parse(int argc, char* const* argv) {
 	}
 }
 
-int main (int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 	// initialize lua
 	lua_State* L;
 	L = luaL_newstate();

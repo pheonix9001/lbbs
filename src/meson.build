@@ -5,6 +5,7 @@ sources = [
 	'global.cpp',
 	'project.cpp',
 	'option.cpp',
+	'lua.cpp',
 	'backends/ninja.cpp',
 	'backends/backend.cpp'
 	]

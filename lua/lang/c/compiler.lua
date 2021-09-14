@@ -15,7 +15,6 @@ M.executable = function(out, sources, obj)
 	for _,file in ipairs(sources) do
 		local out = file:gsub('%.c$', '.o')
 		c_COMPILER:generate(out, {file})
-		-- object_files:insert(out)
 		table.insert(object_files, out);
 	end
 
