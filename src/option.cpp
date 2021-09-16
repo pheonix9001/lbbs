@@ -4,6 +4,7 @@
 
 #include "option.h"
 #include "global.h"
+#include "luah.h"
 
 std::map<std::string, OptionVal> options;
 std::map<std::string, OptionVal> cmd_options;

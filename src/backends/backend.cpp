@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "backend.h"
+#include "luah.h"
 #include "global.h"
 
 extern Backend* backend;

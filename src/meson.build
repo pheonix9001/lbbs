@@ -5,9 +5,9 @@ sources = [
 	'global.cpp',
 	'project.cpp',
 	'option.cpp',
-	'lua.cpp',
+	'luah.cpp',
 	'backends/ninja.cpp',
-	'backends/backend.cpp'
+	'backends/backend.cpp',
 	]
 
 dependencies = [luajit_dep]

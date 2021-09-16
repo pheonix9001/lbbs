@@ -1,17 +1,27 @@
 #include <cstring>
 #include <iostream>
 #include <lua.hpp>
+#include <unistd.h>
 
 #include "project.h"
 #include "backends/ninja.h"
 #include "global.h"
-#include "lua.h"
+#include "luah.h"
 #include "option.h"
 
 Backend* backend = 0;
 char* tachyonfile = (char*)"tachyonfile.lua";
 
-void define_functions(lua_State* L) {
+void define_symbols(lua_State* L) {
+	// Misc
+	char* cwd = new char[PATH_MAX];
+	getcwd(cwd, 64);
+
+	lua_pushstring(L, cwd);
+	lua_setglobal(L, "srcdir");
+
+	delete[] cwd;
+
 	lua_register(L, "project", luafunc_project);
 
 	// Rule
@@ -95,7 +105,7 @@ int main(int argc, char *argv[]) {
 
 	// Initialization functions
 	cmd_line_parse(argc, argv);
-	define_functions(L);
+	define_symbols(L);
 
 	if(backend == 0) {
 		backend = new Ninja{"build/build.ninja"};
