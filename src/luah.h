@@ -17,3 +17,27 @@ public:
 	};
 	~LContext();
 };
+
+template<typename T>
+T Ltable_to_map(lua_State* L, int idx) {
+	T temp;
+
+	// push table and nil
+	lua_pushvalue(L, idx);
+	lua_pushnil(L);
+
+	// get rule from backend
+	while(lua_next(L, -2)) {
+		lua_pushvalue(L, -2);
+
+		// get key and value
+		const char* key = lua_tostring(L, -1);
+		const char* value = lua_tostring(L, -2);
+		temp[key] = value;
+
+		lua_pop(L, 2);
+	}
+	lua_pop(L, 1);
+
+	return temp;
+}

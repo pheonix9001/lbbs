@@ -3,7 +3,6 @@ luajit_dep = dependency('luajit')
 sources = [
 	'main.cpp',
 	'global.cpp',
-	'project.cpp',
 	'option.cpp',
 	'luah.cpp',
 	'backends/ninja.cpp',

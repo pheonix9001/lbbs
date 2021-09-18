@@ -10,26 +10,9 @@ extern Backend* backend;
 int luafunc_rule_new(lua_State* L) {
 	const char* name = luaL_checkstring(L, 1);
 
-	std::unordered_map<std::string, std::string> temp;
 	lerr(!lua_istable(L, 2), "Rule.new expects table as second argument\n");
+	auto temp = Ltable_to_map<std::unordered_map<std::string, std::string>>(L, 2);
 	
-	// push table and nil
-	lua_pushvalue(L, 2);
-	lua_pushnil(L);
-
-	// get rule from backend
-	while(lua_next(L, -2)) {
-		lua_pushvalue(L, -2);
-
-		// get key and value
-		const char* key = lua_tostring(L, -1);
-		const char* value = lua_tostring(L, -2);
-		temp[key] = value;
-
-		lua_pop(L, 2);
-	}
-	lua_pop(L, 1);
-
 	Rule** udata;
 	udata = (Rule**)lua_newuserdata(L, sizeof(Rule**));
 	*udata = backend->create_rule(name, temp);

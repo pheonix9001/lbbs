@@ -3,7 +3,6 @@
 #include <lua.hpp>
 #include <unistd.h>
 
-#include "project.h"
 #include "backends/ninja.h"
 #include "global.h"
 #include "luah.h"
@@ -13,7 +12,7 @@ Backend* backend = 0;
 char* tachyonfile = (char*)"tachyonfile.lua";
 
 void define_symbols(lua_State* L) {
-	// Misc
+	// set srcdir
 	char* cwd = new char[PATH_MAX];
 	getcwd(cwd, 64);
 
@@ -21,8 +20,6 @@ void define_symbols(lua_State* L) {
 	lua_setglobal(L, "srcdir");
 
 	delete[] cwd;
-
-	lua_register(L, "project", luafunc_project);
 
 	// Rule
 	// https://gist.github.com/zester/2438462
@@ -100,6 +97,7 @@ int main(int argc, char *argv[]) {
 
 	// set library path
 	luaL_openlibs(L);
+
 	Lsetpath(L, "/usr/lib/tachyon/?.lua");
 	Lsetcpath(L, "/usr/lib/tachyon/?.so");
 
