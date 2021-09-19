@@ -12,13 +12,22 @@ local c_LINKER = Rule.new('c_LINKER', {
 	description = "Linking $in to $out..."
 })
 
+option('cflags', '""')
+option('c_buildtype', '"debug"')
+
 M.executable = function(out, sources, opts)
 	print("-- Creating executable "..out)
 
 	local opts = opts or {}
 	local object_files = {}
 
-	local cflags = ''
+	local cflags = project.cflags or ''
+	cflags = cflags..' '..get_option('cflags')
+
+	if(get_option('c_buildtype') == 'debug')
+	then
+		cflags = cflags..' -Wall -D_DEBUG_'
+	end
 
 	for _,dep in ipairs(opts.link_with or {}) do
 		cflags = cflags..' '..dep.cflags
