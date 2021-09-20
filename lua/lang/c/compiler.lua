@@ -19,8 +19,6 @@ M.executable = function(out, sources, opts)
 	print("-- Creating executable "..out)
 
 	local opts = opts or {}
-	local object_files = {}
-
 	local cflags = project.cflags or ''
 	cflags = cflags..' '..get_option('cflags')
 
@@ -33,13 +31,14 @@ M.executable = function(out, sources, opts)
 		cflags = cflags..' '..dep.cflags
 	end
 
+	local object_files = {}
 	for _,file in ipairs(sources) do
 		local out = file:gsub('%.c$', '.o')
 		c_COMPILER:generate(out, {srcdir..'/'..file})
 		table.insert(object_files, out);
 	end
 
-	c_LINKER:generate(out, optsect_files)
+	c_LINKER:generate(out, object_files)
 end
 
 M.dep = function(name)

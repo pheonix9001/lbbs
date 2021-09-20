@@ -10,7 +10,7 @@ std::map<std::string, OptionVal> options;
 std::map<std::string, OptionVal> cmd_options;
 
 void serialize_options() {
-	std::ofstream fs{"build/tachyon_opts.txt"};
+	std::ofstream fs{"build/lbbs_opts.txt"};
 
 	for(auto opt: options) {
 		std::string key = opt.first;
@@ -23,7 +23,7 @@ void serialize_options() {
 }
 
 void deserialize_options() {
-	std::ifstream fs{"build/tachyon_opts.txt"};
+	std::ifstream fs{"build/lbbs_opts.txt"};
 	std::string file;
 
 	fs >> file;

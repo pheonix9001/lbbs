@@ -1,1 +1,1 @@
-test('Basic test', tachyon)
+test('Basic test', lbbs)

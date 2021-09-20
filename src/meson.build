@@ -11,6 +11,6 @@ sources = [
 
 dependencies = [luajit_dep]
 
-tachyon = executable('tachyon', sources,
+lbbs = executable('lbbs', sources,
 	install : true,
 	dependencies: dependencies)

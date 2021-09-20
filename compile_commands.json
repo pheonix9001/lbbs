@@ -1,1 +1,38 @@
-build/compile_commands.json
+[
+  {
+    "directory": "/home/asdf/programs/c++/lbbs/build",
+    "command": "c++ -Isrc/lbbs.p -Isrc -I../src -I/usr/include/luajit-2.0 -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -std=c++17 -g -MD -MQ src/lbbs.p/backends_backend.cpp.o -MF src/lbbs.p/backends_backend.cpp.o.d -o src/lbbs.p/backends_backend.cpp.o -c ../src/backends/backend.cpp",
+    "file": "../src/backends/backend.cpp",
+    "output": "src/lbbs.p/backends_backend.cpp.o"
+  },
+  {
+    "directory": "/home/asdf/programs/c++/lbbs/build",
+    "command": "c++ -Isrc/lbbs.p -Isrc -I../src -I/usr/include/luajit-2.0 -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -std=c++17 -g -MD -MQ src/lbbs.p/backends_ninja.cpp.o -MF src/lbbs.p/backends_ninja.cpp.o.d -o src/lbbs.p/backends_ninja.cpp.o -c ../src/backends/ninja.cpp",
+    "file": "../src/backends/ninja.cpp",
+    "output": "src/lbbs.p/backends_ninja.cpp.o"
+  },
+  {
+    "directory": "/home/asdf/programs/c++/lbbs/build",
+    "command": "c++ -Isrc/lbbs.p -Isrc -I../src -I/usr/include/luajit-2.0 -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -std=c++17 -g -MD -MQ src/lbbs.p/luah.cpp.o -MF src/lbbs.p/luah.cpp.o.d -o src/lbbs.p/luah.cpp.o -c ../src/luah.cpp",
+    "file": "../src/luah.cpp",
+    "output": "src/lbbs.p/luah.cpp.o"
+  },
+  {
+    "directory": "/home/asdf/programs/c++/lbbs/build",
+    "command": "c++ -Isrc/lbbs.p -Isrc -I../src -I/usr/include/luajit-2.0 -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -std=c++17 -g -MD -MQ src/lbbs.p/option.cpp.o -MF src/lbbs.p/option.cpp.o.d -o src/lbbs.p/option.cpp.o -c ../src/option.cpp",
+    "file": "../src/option.cpp",
+    "output": "src/lbbs.p/option.cpp.o"
+  },
+  {
+    "directory": "/home/asdf/programs/c++/lbbs/build",
+    "command": "c++ -Isrc/lbbs.p -Isrc -I../src -I/usr/include/luajit-2.0 -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -std=c++17 -g -MD -MQ src/lbbs.p/global.cpp.o -MF src/lbbs.p/global.cpp.o.d -o src/lbbs.p/global.cpp.o -c ../src/global.cpp",
+    "file": "../src/global.cpp",
+    "output": "src/lbbs.p/global.cpp.o"
+  },
+  {
+    "directory": "/home/asdf/programs/c++/lbbs/build",
+    "command": "c++ -Isrc/lbbs.p -Isrc -I../src -I/usr/include/luajit-2.0 -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -std=c++17 -g -MD -MQ src/lbbs.p/main.cpp.o -MF src/lbbs.p/main.cpp.o.d -o src/lbbs.p/main.cpp.o -c ../src/main.cpp",
+    "file": "../src/main.cpp",
+    "output": "src/lbbs.p/main.cpp.o"
+  }
+]

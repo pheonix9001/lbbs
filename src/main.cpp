@@ -9,7 +9,7 @@
 #include "option.h"
 
 Backend* backend = 0;
-char* tachyonfile = (char*)"tachyonfile.lua";
+char* lbbsfile = (char*)"build.lua";
 
 void define_symbols(lua_State* L) {
 	// set srcdir
@@ -53,7 +53,7 @@ void cmd_line_parse(int argc, char* const* argv) {
 			switch (c) {
 				// general
 				case 'f':
-					tachyonfile = argv[1];
+					lbbsfile = argv[1];
 					argc--;
 					break;
 
@@ -98,8 +98,8 @@ int main(int argc, char *argv[]) {
 	// set library path
 	luaL_openlibs(L);
 
-	Lsetpath(L, "/usr/lib/tachyon/?.lua");
-	Lsetcpath(L, "/usr/lib/tachyon/?.so");
+	Lsetpath(L, "/usr/lib/lbbs/?.lua");
+	Lsetcpath(L, "/usr/lib/lbbs/?.so");
 
 	// Initialization functions
 	cmd_line_parse(argc, argv);
@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
 		backend = new Ninja{"build/build.ninja"};
 	}
 
-	int result = luaL_dofile(L, tachyonfile);
+	int result = luaL_dofile(L, lbbsfile);
 	Lcheck_err(result, L);
 
 	serialize_options();
