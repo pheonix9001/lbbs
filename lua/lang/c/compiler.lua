@@ -20,15 +20,21 @@ M.executable = function(out, sources, opts)
 
 	local opts = opts or {}
 	local cflags = project.cflags or ''
+	local ldflags = project.ldflags or ''
+
 	cflags = cflags..' '..get_option('cflags')
+	ldflags = ldflags..' '..get_option('ldflags')
 
 	if(get_option('c_buildtype') == 'debug')
 	then
-		cflags = cflags..' -Wall -D_DEBUG_'
+		cflags = cflags..' -O2 -Wall -Werr -D_DEBUG_'
+	elseif(get_option('c_buildtype') == 'release')
+		ldflags = ldflags..' -O3 -Wall -D_RELEASE_'
 	end
 
 	for _,dep in ipairs(opts.link_with or {}) do
 		cflags = cflags..' '..dep.cflags
+		ldflags = ldflags..' '..dep.ldflags
 	end
 
 	local object_files = {}
@@ -40,7 +46,10 @@ M.executable = function(out, sources, opts)
 		table.insert(object_files, out);
 	end
 
-	c_LINKER:generate(out, object_files, {})
+	c_LINKER:generate(out, object_files, {
+		cflags = cflags,
+		ldflags = ldflags
+	})
 end
 
 M.dep = function(name)
