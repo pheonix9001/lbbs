@@ -8,7 +8,8 @@ class NinjaRule: protected Rule {
 	std::string name;
 public:
 	NinjaRule(std::string _name);
-	void generate(std::string out, std::vector<std::string>& in);
+	void generate(std::string out, std::vector<std::string>& in,
+	std::unordered_map<std::string, std::string> opts);
 };
 
 class Ninja: public Backend {

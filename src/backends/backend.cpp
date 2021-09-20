@@ -34,10 +34,10 @@ int luafunc_rule_generate(lua_State* L) {
 	Rule* o = *(Rule**)luaL_checkudata(L, 1, "Rule_meta");
 	const char* out = luaL_checkstring(L, 2);
 
-	std::vector<std::string> in;
-	in = Ltable_to_vector(L, 3);
+	std::vector<std::string> in = Ltable_to_vector(L, 3);
+	auto opts = Ltable_to_map<std::unordered_map<std::string, std::string>>(L, 4);
 
-	o->generate(out, in);
+	o->generate(out, in, opts);
 
 	return 0;
 }

@@ -15,13 +15,20 @@ NinjaRule::NinjaRule(std::string _name) {
 	this->name = _name;
 }
 
-void NinjaRule::generate(std::string out, std::vector<std::string>& in) {
+void NinjaRule::generate(std::string out, std::vector<std::string>& in,
+std::unordered_map<std::string, std::string> opts) {
 	auto& fs = ((Ninja*)backend)->fs;
 
 	fs << "build " << out << ": " << this->name;
 	for(auto& i: in) {
 		fs << " " << i ;
 	}
+	fs << "\n";
+
+	for(auto& kv: opts) {
+		fs << " " << kv.first << " = " << kv.second << "\n";
+	}
+
 	fs << "\n";
 }
 

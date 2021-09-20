@@ -5,7 +5,8 @@
 
 class Rule {
 public:
-	virtual void generate(std::string out, std::vector<std::string>& in)=0;
+	virtual void generate(std::string out, std::vector<std::string>& in,
+	std::unordered_map<std::string, std::string> opts)=0;
 	virtual ~Rule() {}
 };
 

@@ -3,7 +3,7 @@ assert(project, "Define 'project' brefore calling 'require'")
 M = {}
 
 local c_COMPILER = Rule.new('c_COMPILER', {
-	command = "gcc -c -o $out $in",
+	command = "gcc $cflags -c -o $out $in",
 	description = "Compiling $out..."
 })
 
@@ -34,11 +34,13 @@ M.executable = function(out, sources, opts)
 	local object_files = {}
 	for _,file in ipairs(sources) do
 		local out = file:gsub('%.c$', '.o')
-		c_COMPILER:generate(out, {srcdir..'/'..file})
+		c_COMPILER:generate(out, {srcdir..'/'..file}, {
+			cflags = cflags
+		})
 		table.insert(object_files, out);
 	end
 
-	c_LINKER:generate(out, object_files)
+	c_LINKER:generate(out, object_files, {})
 end
 
 M.dep = function(name)
