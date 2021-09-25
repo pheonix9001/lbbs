@@ -28,28 +28,27 @@ void deserialize_options() {
 
 	fs >> file;
 
-	auto getnextsub = [&file](int& start, int& end) {
+	auto getnextsub = [&file](size_t& start, size_t& end) {
 		start = end + 1;
 		end = file.find("\033", start);
 	};
 
-	int start = 0;
-	int end = file.find("\033");
+	size_t start = 0;
+	size_t end = file.find("\033");
 
 	for (;(std::string::size_type)end != std::string::npos;) {
-		int klen = std::stoi(file.substr(start, end));
+		int klen = std::stoi(file.substr(start, end - start));
 
 		start = end + 1;
 		end += klen + 1;
-		std::string kkey = file.substr(start, end - 2);
+		std::string kkey = file.substr(start, end - start);
 
 		getnextsub(start, end);
-		int vlen = std::stoi(file.substr(start, end - 2));
+		int vlen = std::stoi(file.substr(start, end - start));
 
 		start = end + 1;
 		end += vlen + 1;
-		std::string value = file.substr(start, end - 2);
-		value = value.substr(0, value.length() - 1);
+		std::string value = file.substr(start, end - start);
 
 		getnextsub(start, end);
 		cmd_options[kkey].data = value;

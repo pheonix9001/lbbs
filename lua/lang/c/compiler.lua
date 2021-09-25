@@ -13,12 +13,24 @@ local c_LINKER = Rule.new('c_LINKER', {
 })
 
 option('cflags', '""')
+option('ldflags', '""')
 option('c_buildtype', '"debug"')
+
+M.Dep = {
+	cflags = get_option('cflags')..(project.cflags or ''),
+	ldflags = get_option('ldflags')..(project.ldflags or ''),
+
+	new = function(o, name)
+		local o = o or setmetatable(o, M.Dep)
+
+		return o
+	end
+}
 
 M.executable = function(out, sources, opts)
 	print("-- Creating executable "..out)
-
 	local opts = opts or {}
+
 	local cflags = project.cflags or ''
 	local ldflags = project.ldflags or ''
 
@@ -29,6 +41,7 @@ M.executable = function(out, sources, opts)
 	then
 		cflags = cflags..' -O2 -Wall -Werr -D_DEBUG_'
 	elseif(get_option('c_buildtype') == 'release')
+	then
 		ldflags = ldflags..' -O3 -Wall -D_RELEASE_'
 	end
 
