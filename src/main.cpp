@@ -104,7 +104,8 @@ inline void sol_panic(std::optional<std::string> msg) {
 int main(int argc, char *argv[]) {
 	// initialize lua
 	sol::state S;
-	S.open_libraries(sol::lib::package, sol::lib::base, sol::lib::os);
+	S.open_libraries(sol::lib::package, sol::lib::base, sol::lib::os,
+	sol::lib::jit, sol::lib::math, sol::lib::io);
 
 	const std::string package_path = S["package"]["path"];
 	S["package"]["path"] = package_path + ";/usr/lib/lbbs/?.lua";
