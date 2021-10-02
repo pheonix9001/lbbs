@@ -1,4 +1,5 @@
 #include <fstream>
+#include <unordered_map>
 
 #include "backends/backend.h"
 
@@ -6,7 +7,7 @@ class Ninja;
 
 class NinjaRule: protected Rule {
 	std::string name;
-public:
+	public:
 	NinjaRule(std::string _name);
 	void generate(std::string out, std::vector<std::string>& in,
 	std::unordered_map<std::string, std::string> opts);

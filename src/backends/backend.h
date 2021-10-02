@@ -3,6 +3,9 @@
 #include <vector>
 #include <unordered_map>
 
+#include <limits>
+#include <sol/sol.hpp>
+
 class Rule {
 public:
 	virtual void generate(std::string out, std::vector<std::string>& in,
@@ -15,6 +18,19 @@ public:
 	virtual Rule* create_rule(std::string name,
 	std::unordered_map<std::string, std::string>& extra_props)=0;
 	virtual ~Backend() {}
+};
+
+// Lua version of Rule
+class LRule{
+private:
+	Rule* rule;
+public:
+	LRule(std::string name, sol::table opts);
+	LRule() {};
+	~LRule() { delete rule; };
+
+	void generate(std::string out, sol::table in,
+	sol::table opts);
 };
 
 int luafunc_rule_new(lua_State* L);

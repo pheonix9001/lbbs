@@ -1,7 +1,9 @@
+#include <limits>
 #include <cstring>
 #include <iostream>
-#include <lua.hpp>
 #include <unistd.h>
+
+#include <sol/sol.hpp>
 
 #include "backends/ninja.h"
 #include "global.h"
@@ -11,35 +13,38 @@
 Backend* backend = 0;
 char* lbbsfile = (char*)"build.lua";
 
-void define_symbols(lua_State* L) {
+void define_symbols(sol::state& S) {
 	// set srcdir
 	char* cwd = new char[PATH_MAX];
 	getcwd(cwd, 64);
 
-	lua_pushstring(L, cwd);
-	lua_setglobal(L, "srcdir");
+	S["srcdir"] = cwd;
 
 	delete[] cwd;
 
 	// Rule
 	// https://gist.github.com/zester/2438462
-	luaL_Reg rule_regs[] = {
-		{"new", luafunc_rule_new},
-		{"generate", luafunc_rule_generate},
-		{"__gc", luafunc_rule_destroy},
-		{0, 0}
-	};
+	// luaL_Reg rule_regs[] = {
+		// {"new", luafunc_rule_new},
+		// {"generate", luafunc_rule_generate},
+		// {"__gc", luafunc_rule_destroy},
+		// {0, 0}
+	// };
 
-	luaL_newmetatable(L, "Rule_meta");
-	luaL_register(L, 0, rule_regs);
+	// luaL_newmetatable(L, "Rule_meta");
+	// luaL_register(L, 0, rule_regs);
 
-	lua_pushvalue(L, -1);
-	lua_setfield(L, -1, "__index");
-	lua_setglobal(L, "Rule");
+	// lua_pushvalue(L, -1);
+	// lua_setfield(L, -1, "__index");
+	// lua_setglobal(L, "Rule");
+	S.new_usertype<LRule>("Rule",
+		sol::constructors<LRule(), LRule(std::string, sol::table)>{},
+		"generate", &LRule::generate
+	);
 
 	// Options
-	lua_register(L, "option", luafunc_option);
-	lua_register(L, "get_option", luafunc_get_option);
+	S.set_function("option",&luafunc_option);
+	S.set_function("get_option",&luafunc_get_option);
 }
 
 void cmd_line_parse(int argc, char* const* argv) {
@@ -90,31 +95,38 @@ void cmd_line_parse(int argc, char* const* argv) {
 	}
 }
 
+inline void sol_panic(std::optional<std::string> msg) {
+	if(msg) {
+		std::cout << msg.value() << std::endl;
+	}
+}
+
 int main(int argc, char *argv[]) {
 	// initialize lua
-	lua_State* L;
-	L = luaL_newstate();
+	sol::state S;
+	S.open_libraries(sol::lib::package, sol::lib::base, sol::lib::os);
 
-	// set library path
-	luaL_openlibs(L);
-
-	Lsetpath(L, "/usr/lib/lbbs/?.lua");
-	Lsetcpath(L, "/usr/lib/lbbs/?.so");
+	const std::string package_path = S["package"]["path"];
+	S["package"]["path"] = package_path + ";/usr/lib/lbbs/?.lua";
+	const std::string package_cpath = S["package"]["cpath"];
+	S["package"]["cpath"] = package_cpath + ";/usr/lib/lbbs/?.so";
 
 	// Initialization functions
 	cmd_line_parse(argc, argv);
-	define_symbols(L);
+	define_symbols(S);
 
 	if(backend == 0) {
 		backend = new Ninja{"build/build.ninja"};
 	}
 
-	int result = luaL_dofile(L, lbbsfile);
-	Lcheck_err(result, L);
+	try {
+		S.script_file(lbbsfile);
 
-	serialize_options();
+		serialize_options();
+	} catch (sol::error e) {
+		std::cout << e.what() << std::endl;
+	}
 
-	lua_close(L);
 	delete backend;
 	return 0;
 }

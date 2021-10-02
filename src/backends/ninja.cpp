@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <algorithm>
+#include <map>
 
 extern Backend* backend;
 
@@ -48,7 +49,8 @@ Ninja::~Ninja() {
 	this->fs << "# END" << std::endl;
 }
 
-Rule* Ninja::create_rule(std::string name, std::unordered_map<std::string, std::string>& extra_props) {
+Rule* Ninja::create_rule(std::string name,
+std::unordered_map<std::string, std::string>& extra_props) {
 	this->fs << "rule " << name << "\n";
 	for (auto& kv: extra_props) {
 		this->fs << " " << kv.first << " = " << kv.second << "\n";
