@@ -22,21 +22,6 @@ void define_symbols(sol::state& S) {
 
 	delete[] cwd;
 
-	// Rule
-	// https://gist.github.com/zester/2438462
-	// luaL_Reg rule_regs[] = {
-		// {"new", luafunc_rule_new},
-		// {"generate", luafunc_rule_generate},
-		// {"__gc", luafunc_rule_destroy},
-		// {0, 0}
-	// };
-
-	// luaL_newmetatable(L, "Rule_meta");
-	// luaL_register(L, 0, rule_regs);
-
-	// lua_pushvalue(L, -1);
-	// lua_setfield(L, -1, "__index");
-	// lua_setglobal(L, "Rule");
 	S.new_usertype<LRule>("Rule",
 		sol::constructors<LRule(), LRule(std::string, sol::table)>{},
 		"generate", &LRule::generate
