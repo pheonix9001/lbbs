@@ -11,7 +11,6 @@
 #include "option.h"
 
 Backend* backend = 0;
-// char* lbbsfile = (char*)"build.lua";
 std::string lbbsfile{"build.lua"};
 char* cwd = new char[PATH_MAX];
 
@@ -101,12 +100,7 @@ inline void sol_panic(std::optional<std::string> msg) {
 int main(int argc, char *argv[]) {
 	// initialize lua
 	sol::state S;
-	S.open_libraries(sol::lib::package,
-	sol::lib::base,
-	sol::lib::os,
-	sol::lib::jit,
-	sol::lib::io,
-	sol::lib::math, sol::lib::string, sol::lib::table);
+	luaL_openlibs(S.lua_state());
 
 	const std::string package_path = S["package"]["path"];
 	S["package"]["path"] = package_path + ";/usr/lib/lbbs/?.lua";
