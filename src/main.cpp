@@ -78,6 +78,20 @@ void cmd_line_parse(int argc, char* const* argv) {
 	}
 }
 
+static void gen_regenerate_rule() {
+	std::map<std::string, std::string> opts = {
+		{"command", (std::string)"cd " + cwd + " && lbbs"},
+		{"description", "Regenerating $out..."},
+		{"generator", "1"}
+	};
+	auto regenerate_rule = backend->create_rule("regenerate", opts);
+
+	opts.clear();
+	std::vector<std::string> in = { "../" + lbbsfile };
+	regenerate_rule->generate("build.ninja", in, opts);
+}
+
+
 inline void sol_panic(std::optional<std::string> msg) {
 	if(msg) {
 		std::cout << msg.value() << std::endl;
@@ -106,25 +120,11 @@ int main(int argc, char *argv[]) {
 	if(backend == 0) {
 		backend = new Ninja{"build/build.ninja"};
 	}
+	gen_regenerate_rule();
 
-	try {
-		std::map<std::string, std::string> opts = {
-			{"command", (std::string)"cd " + cwd + " && lbbs"},
-			{"description", "Regenerating $out..."},
-			{"generator", "1"}
-		};
-		auto regenerate_rule = backend->create_rule("regenerate", opts);
+	S.script_file(lbbsfile);
 
-		opts.clear();
-		std::vector<std::string> in = { "../" + lbbsfile };
-		regenerate_rule->generate("build.ninja", in, opts);
-
-		S.script_file(lbbsfile);
-
-		serialize_options();
-	} catch (sol::error e) {
-		std::cout << e.what() << std::endl;
-	}
+	serialize_options();
 
 	delete backend;
 	return 0;
