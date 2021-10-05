@@ -11,16 +11,14 @@
 #include "option.h"
 
 Backend* backend = 0;
-char* lbbsfile = (char*)"build.lua";
+// char* lbbsfile = (char*)"build.lua";
+std::string lbbsfile{"build.lua"};
+char* cwd = new char[PATH_MAX];
 
 void define_symbols(sol::state& S) {
 	// set srcdir
-	char* cwd = new char[PATH_MAX];
 	getcwd(cwd, 64);
-
 	S["srcdir"] = cwd;
-
-	delete[] cwd;
 
 	S.new_usertype<LRule>("Rule",
 		sol::constructors<LRule(), LRule(std::string, sol::table)>{},
@@ -89,8 +87,12 @@ inline void sol_panic(std::optional<std::string> msg) {
 int main(int argc, char *argv[]) {
 	// initialize lua
 	sol::state S;
-	S.open_libraries(sol::lib::package, sol::lib::base, sol::lib::os,
-	sol::lib::jit, sol::lib::math, sol::lib::io);
+	S.open_libraries(sol::lib::package,
+	sol::lib::base,
+	sol::lib::os,
+	sol::lib::jit,
+	sol::lib::io,
+	sol::lib::math, sol::lib::string, sol::lib::table);
 
 	const std::string package_path = S["package"]["path"];
 	S["package"]["path"] = package_path + ";/usr/lib/lbbs/?.lua";
@@ -106,6 +108,17 @@ int main(int argc, char *argv[]) {
 	}
 
 	try {
+		std::map<std::string, std::string> opts = {
+			{"command", (std::string)"cd " + cwd + " && lbbs"},
+			{"description", "Regenerating $out..."},
+			{"generator", "1"}
+		};
+		auto regenerate_rule = backend->create_rule("regenerate", opts);
+
+		opts.clear();
+		std::vector<std::string> in = { "../" + lbbsfile };
+		regenerate_rule->generate("build.ninja", in, opts);
+
 		S.script_file(lbbsfile);
 
 		serialize_options();

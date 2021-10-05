@@ -17,7 +17,7 @@ NinjaRule::NinjaRule(std::string _name) {
 }
 
 void NinjaRule::generate(std::string out, std::vector<std::string>& in,
-std::unordered_map<std::string, std::string> opts) {
+std::map<std::string, std::string> opts) {
 	auto& fs = ((Ninja*)backend)->fs;
 
 	fs << "build " << out << ": " << this->name;
@@ -50,7 +50,7 @@ Ninja::~Ninja() {
 }
 
 Rule* Ninja::create_rule(std::string name,
-std::unordered_map<std::string, std::string>& extra_props) {
+std::map<std::string, std::string>& extra_props) {
 	this->fs << "rule " << name << "\n";
 	for (auto& kv: extra_props) {
 		this->fs << " " << kv.first << " = " << kv.second << "\n";
