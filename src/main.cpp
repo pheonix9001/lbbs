@@ -84,7 +84,7 @@ inline void sol_panic(std::optional<std::string> msg) {
 
 int main(int argc, char *argv[]) {
 	// initialize lua
-	sol::state S;
+	sol::state S{sol::c_call<decltype(&sol_panic), &sol_panic>};
 	luaL_openlibs(S.lua_state());
 
 	const std::string package_path = S["package"]["path"];
