@@ -4,7 +4,6 @@ sources = [
 	'main.cpp',
 	'global.cpp',
 	'option.cpp',
-	'luah.cpp',
 	'backends/ninja.cpp',
 	'backends/backend.cpp',
 	]

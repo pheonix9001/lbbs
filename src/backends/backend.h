@@ -32,7 +32,3 @@ public:
 	void generate(std::string out, sol::table in,
 	sol::table opts);
 };
-
-int luafunc_rule_new(lua_State* L);
-int luafunc_rule_generate(lua_State* L);
-int luafunc_rule_destroy(lua_State* L);

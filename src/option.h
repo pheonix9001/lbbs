@@ -4,19 +4,27 @@
 #include <map>
 #include <string>
 #include <lua.hpp>
+#include <limits>
+#include <sol/sol.hpp>
 
 // generic option type
 class OptionVal {
 	private:
 	public:
-	std::string data;
+	sol::object data;
+
+	OptionVal(): data(0) {
+	}
+
+	~OptionVal() {
+	}
 };
 
-void serialize_options();
-void deserialize_options();
+// void serialize_options();
+// void deserialize_options();
 
-int luafunc_option(lua_State* L);
-int luafunc_get_option(lua_State* L);
+sol::object luafunc_option(std::string name, sol::object def, std::optional<bool> ischecked);
+sol::object luafunc_get_option(std::string name);
 
-extern std::map<std::string, OptionVal> options;
-extern std::map<std::string, OptionVal> cmd_options;
+extern std::map<std::string, sol::object> options;
+extern std::map<std::string, sol::object> cmd_options;

@@ -1,9 +1,10 @@
-M = {}
+local M = {}
+
+-- Modules
+require'lang/ccpp/options'
 
 M.cflags = get_option('cflags')..(project.cflags or '')
 M.ldflags = get_option('ldflags')..(project.ldflags or '')
-
-option('c_buildtype', '"debug"')
 
 M.new = function(o, name)
 	local o = o or setmetatable(o, M)
@@ -32,7 +33,7 @@ M.new = function(o, name)
 
 	if(get_option('c_buildtype') == 'debug')
 	then
-		o.cflags = o.cflags..' -O2 -Wall -Werror -D_DEBUG_'
+		o.cflags = o.cflags..' -d -O2 -Wall -Werror -D_DEBUG_'
 	elseif(get_option('c_buildtype') == 'release')
 	then
 		o.cflags = o.cflags..' -O3 -Wall -Werror -D_RELEASE_'
