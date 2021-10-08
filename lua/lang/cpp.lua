@@ -1,26 +1,18 @@
-assert(project, "Define 'project' brefore calling 'require'")
-
--- Dependencies
-require'lang/ccpp/options'
-require'lang/cpp/options'
-local dep = require'lang/ccpp/dependency'
-
 local M = {}
 
-local c_COMPILER = Rule.new('c_COMPILER', {
-	command = "gcc $cflags -c -o $out $in",
-	description = "Compiling $out..."
-})
+local LINKER = require'lang/ccpp/linker'
+local dep = require'lang/ccpp/dependency'
+local cpp_COMPILER = require'lang/cpp/compiler'
 
 -- Utility function
 --
--- Takes in list of .c sources, generates `build` definitions,
+-- Takes in list of .cpp sources, generates `build` definitions,
 -- and returns .o files
 M.objects = function(sources, opts)
 	local object_files = {}
 	for _,file in ipairs(sources) do
-		local out = file:gsub('%.c$', '.o')
-		c_COMPILER:generate(out, {srcdir..'/'..file}, opts)
+		local out = string.gsub(file, '%.cpp$', '.o')
+		cpp_COMPILER:generate(out, {srcdir..'/'..file}, opts)
 		table.insert(object_files, out);
 	end
 
@@ -41,9 +33,6 @@ M.executable = function(out, sources, opts)
 	LINKER:generate(out, obj_files, {
 		ldflags = basedep.ldflags
 	})
-end
-
-M.lib = function(out, sources, opts)
 end
 
 return M

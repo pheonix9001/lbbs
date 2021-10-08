@@ -3,11 +3,11 @@ project = {
 	lang = 'cpp',
 	desc = 'A simple test case'
 }
-local c = require'lang.c.compiler'
+local cpp = require'lang.cpp'
 local dep = require'lang.ccpp.dependency'
 
 local lua_dep = dep:new('luajit')
 
-c.executable('hello', {'src/main.c'}, {
+cpp.executable('hello', {'src/main.cpp'}, {
 	link_with = {lua_dep}
 })
